@@ -528,6 +528,9 @@ const TOWNS = [
   {
     id: "torry", name: "Torry", ward: "Torry/Ferryhill ward (AB11)",
     priority: 1, color: "#FF6B35", lat: 57.1336, lng: -2.0847,
+    // Torry is compact and east of the Dee — tighten the search to keep it out of
+    // central Aberdeen (north) and Cove (south). About +/- 0.8 km each way.
+    searchPadNS: 0.008, searchPadEW: 0.014,
     sectors: ["AB11 8","AB11 9"], subsectorPrefix: "AB11 ",
     customSubsectors: [
       {code:"AB11 8", label:"AB11 8 — Balnagask, Oscar Road, Tullos edge"},
@@ -535,28 +538,39 @@ const TOWNS = [
     ],
     estProperties: 4500,
     notes: "Jo's launch area. Dense granite tenements — efficient leafleting, watch shared stairs. Oil & gas heartland.",
-    // Verified Torry residential streets (cross-checked, real):
-    knownStreets: ["Victoria Road","Menzies Road","Walker Road","Walker Lane","Walker Place","Grampian Road","Sinclair Road","Abbey Road","Abbey Place","Crombie Road","Oscar Road","Balnagask Road"],
+    // Verified Torry residential streets (cross-checked: StreetCheck, StreetList, property listings):
+    knownStreets: ["Victoria Road","Menzies Road","Walker Road","Walker Lane","Walker Place","Grampian Road","Sinclair Road","Abbey Road","Abbey Place","Crombie Road","Oscar Road","Balnagask Road","Balnagask Avenue","Balnagask Circle","Balnagask Crescent","Balnagask Terrace","Girdleness Road","Greyhope Road","Baxter Place"],
   },
   {
     id: "kincorth", name: "Kincorth", ward: "Kincorth/Nigg/Cove ward (AB12)",
     priority: 1, color: "#FF6B35", lat: 57.1170, lng: -2.0950,
+    // Kincorth is also fairly compact, but tunes slightly larger than Torry.
+    searchPadNS: 0.010, searchPadEW: 0.016,
     sectors: ["AB12 5"], subsectorPrefix: "AB12 5",
     subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S"],
     estProperties: 4000,
     notes: "Post-war residential suburb, houses with gardens. Slower per street than Torry.",
+    // Verified Kincorth streets (cross-checked: aberdeencity.gov.uk, StreetCheck, property listings):
+    knownStreets: ["Provost Watt Drive","Kincorth Circle","Faulds Row","Faulds Gate","Faulds Wynd","Cairngorm Crescent","Abbotswell Crescent","Auldearn Road","Baxter Court"],
   },
   {
     id: "niggcove", name: "Nigg & Cove", ward: "Kincorth/Nigg/Cove ward (AB12)",
     priority: 1, color: "#FF6B35", lat: 57.1045, lng: -2.0780,
+    // Cove sprawls south from this centre — push the box south.
+    searchPadNS: 0.014, searchPadEW: 0.016,
     sectors: ["AB12 3"], subsectorPrefix: "AB12 3",
     subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S","T","U","W"],
     estProperties: 5000,
     notes: "Modern commuter estates + Cove Bay village. Lower density, skip Altens/Tullos industry.",
+    // Verified Cove Bay streets (cross-checked: Wikipedia, OpenAlfa, StreetCheck, GetTheData):
+    knownStreets: ["Loirston Road","Loirston Avenue","Loirston Close","Loirston Court","Loirston Place","Loirston Manor","Earns Heugh Road","Earns Heugh Crescent","Catto Walk","Catto Crescent","Dunlin Road","Partan Skelly Avenue","Partan Skelly Way","Sinclair Crescent","Charleston Drive","Cove Road","Wellington Circle","Bervie Brow"],
   },
   {
     id: "ferryhill", name: "Ferryhill", ward: "Torry/Ferryhill ward (AB10/AB11)",
     priority: 2, color: "#FFB347", lat: 57.1365, lng: -2.1050,
+    // Compact inner suburb. Council document gives the boundaries as Bon-Accord/Willowbank to
+    // the north, Polmuir/Duthie Park to the south, Fonthill to the west.
+    searchPadNS: 0.008, searchPadEW: 0.012,
     sectors: ["AB11 6","AB11 7"], subsectorPrefix: "AB11 ",
     customSubsectors: [
       {code:"AB11 6", label:"AB11 6 — Ferryhill / Bon Accord side"},
@@ -564,30 +578,42 @@ const TOWNS = [
     ],
     estProperties: 3500,
     notes: "Victorian villas, terraces and flats. Central, dense, walkable.",
+    // Verified Ferryhill streets (cross-checked: Historic Scotland, Aberdeen City Council conservation profile):
+    knownStreets: ["Ferryhill Road","Fonthill Road","Fonthill Terrace","Polmuir Road","Bon-Accord Street","Bon-Accord Crescent","Bon-Accord Square","Whinhill Road","Devanha Gardens","Willowbank Road","Forbesfield Road","Marine Terrace","Crown Street","Crown Terrace","Gairn Terrace"],
   },
   {
     id: "ruthrieston", name: "Ruthrieston", ward: "Airyhall/Broomhill/Garthdee (AB10)",
     priority: 2, color: "#FFB347", lat: 57.1280, lng: -2.1230,
+    searchPadNS: 0.010, searchPadEW: 0.014,
     sectors: ["AB10 7"], subsectorPrefix: "AB10 7",
     subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P"],
     estProperties: 3000,
     notes: "Settled residential near Bridge of Dee. Moderate door-density.",
+    // Verified Ruthrieston streets (cross-checked: Aberdeen Street Index, property listings):
+    knownStreets: ["Ruthrieston Road","Ruthrieston Crescent","Ruthrieston Terrace","Ruthrieston Place","Ruthrieston Circle","Anderson Drive","Holburn Street","Great Southern Road","Inchbrae Road","Inchbrae Drive","Inchbrae Terrace","Broomhill Road"],
   },
   {
     id: "garthdee", name: "Garthdee", ward: "Airyhall/Broomhill/Garthdee (AB10)",
     priority: 3, color: "#90E0EF", lat: 57.1180, lng: -2.1340,
+    searchPadNS: 0.010, searchPadEW: 0.014,
     sectors: ["AB10 7"], subsectorPrefix: "AB10 7",
     subsectorLetters: ["Q","R","S","T","U","W","X","Y"],
     estProperties: 2500,
     notes: "Housing + RGU campus + retail park. Skip campus & retail; student lets = no-answers.",
+    // Verified Garthdee streets (cross-checked: Aberdeen Street Index, property listings):
+    knownStreets: ["Garthdee Road","Garthdee Drive","Garthdee Crescent","Garthdee Terrace","Morrison Drive","Ramsay Gardens","Kaimhill Road","Kaimhill Circle","Kaimhill Gardens","Gairn Crescent","Gairn Circle"],
   },
   {
     id: "cults", name: "Cults", ward: "Lower Deeside ward (AB15)",
     priority: 3, color: "#90E0EF", lat: 57.1167, lng: -2.1667,
+    // Cults / Bieldside / Milltimber spread west along the A93 — needs a much wider east-west box.
+    searchPadNS: 0.012, searchPadEW: 0.030,
     sectors: ["AB15 9"], subsectorPrefix: "AB15 9",
     subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S"],
     estProperties: 3000,
     notes: "Affluent — large detached homes, big gardens, LOWEST door-density. Slow; budget time.",
+    // Verified Cults streets (cross-checked: StreetList, Cults Parish Church, GeoStats, property listings):
+    knownStreets: ["North Deeside Road","Quarry Road","Kirk Brae","Kirk Crescent South","Kirk Terrace","Manor Place","Earlswells Road","South Avenue","Dunmail Avenue","Den of Cults","Inchgarth Road","Deeview Road South","Station Road","Primrosehill Road"],
   },
 ];
 
@@ -950,8 +976,13 @@ function ZoneBuilderTab({user}) {
   async function loadStreets(town) {
     setStreets([]); setLoading(true);
     try {
-      const pad = 0.05;
-      const south = (town.lat - pad).toFixed(6), west = (town.lng - pad).toFixed(6), north = (town.lat + pad).toFixed(6), east = (town.lng + pad).toFixed(6);
+      // Per-area search radius. Aberdeen South neighbourhoods are tightly packed,
+      // so use a tight default and let each area override. searchPadNS = north-south
+      // (latitude degrees ~ 111 km/deg), searchPadEW = east-west (at 57°N ~ 60 km/deg).
+      // Defaults give roughly +/- 1.3 km N/S and +/- 1.2 km E/W around the centre.
+      const padNS = town.searchPadNS ?? 0.012;
+      const padEW = town.searchPadEW ?? 0.020;
+      const south = (town.lat - padNS).toFixed(6), west = (town.lng - padEW).toFixed(6), north = (town.lat + padNS).toFixed(6), east = (town.lng + padEW).toFixed(6);
       const endpoints = ["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://maps.mail.ru/osm/tools/overpass/api/interpreter"];
       const overpassQuery = `[out:json][timeout:30];way["highway"~"^(residential|primary|secondary|tertiary|unclassified|living_street|pedestrian|service)$"]["name"](${south},${west},${north},${east});out geom;`;
       let data = null;
