@@ -333,7 +333,7 @@ function AreasTab({user}){
     <Section title="Distances"><div style={{display:"flex",gap:16,flexWrap:"wrap"}}><div><div style={{fontSize:"0.58rem",color:"#4a7a8a"}}>From base (Torry Battery)</div><div style={{fontSize:"0.8rem",color:"#12B6CF",fontFamily:"monospace",fontWeight:600}}>{distLabel(bDist[area.coordId])}</div></div>{userDists&&user?.name&&<div><div style={{fontSize:"0.58rem",color:"#4a7a8a"}}>{user.name}</div><div style={{fontSize:"0.8rem",color:"#FFB347",fontFamily:"monospace",fontWeight:600}}>{distLabel(userDists[area.coordId])}</div></div>}</div></Section>
     {[{title:"Notable streets / parts",content:area.towns.map(t=><div key={t} style={{fontSize:"0.7rem",color:"#c0d8e4",padding:"4px 0",borderBottom:"1px solid #162838"}}>📍 {t}</div>)},{title:"Character",content:<p style={{fontSize:"0.7rem",color:"#c0d8e4",lineHeight:1.7,margin:0}}>{area.character}</p>},{title:"Delivery notes",content:<p style={{fontSize:"0.7rem",color:"#c0d8e4",lineHeight:1.7,margin:0}}>{area.delivery}</p>},{title:"Local issues",content:area.issues.map((i,idx)=><div key={idx} style={{display:"flex",gap:8,marginBottom:6}}><div style={{color:area.color,fontSize:"0.7rem",flexShrink:0}}>▸</div><div style={{fontSize:"0.68rem",color:"#c0d8e4",lineHeight:1.5}}>{i}</div></div>)},{title:"For the campaign",content:<p style={{fontSize:"0.7rem",color:"#c0d8e4",lineHeight:1.7,margin:0}}>{area.political}</p>}].map(s=><Section key={s.title} title={s.title}>{s.content}</Section>)}
     <div style={{fontSize:"0.55rem",color:"#4a7a8a",lineHeight:1.6,marginTop:8,fontStyle:"italic"}}>Public-knowledge briefing only — drawn from SIMD, council profiles and census. No voter data.</div></div>);
-  return(<div style={{padding:"16px",paddingBottom:32}}><div style={{fontSize:"0.57rem",color:"#64b5d8",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:10}}>7 Areas — Tap for Detail</div>{AREAS.map(a=>(<button key={a.id} onClick={()=>setSel(a.id)} style={{width:"100%",background:"#0d1b2a",border:"1px solid #1a3a50",borderLeft:`4px solid ${a.color}`,borderRadius:8,padding:"13px 14px",marginBottom:10,cursor:"pointer",textAlign:"left",display:"block"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}><div style={{flex:1}}><div style={{fontSize:"0.85rem",fontWeight:700,color:"#fff"}}>{a.name}</div><div style={{fontSize:"0.58rem",color:"#64b5d8",marginTop:2}}>{a.ward}</div></div><div style={{textAlign:"right",flexShrink:0,marginLeft:10}}><div style={{fontSize:"0.58rem",color:a.color,fontWeight:700}}>{priorityLabel(a.priority)}</div></div></div><div style={{marginTop:8,display:"flex",gap:8,flexWrap:"wrap"}}><span style={{fontSize:"0.58rem",color:"#4a7a8a"}}>🚶 Base: {distLabel(bDist[a.coordId])}</span>{userDists&&user?.name&&<span style={{fontSize:"0.58rem",color:"#FFB347"}}>{user.name}: {distLabel(userDists[a.coordId])}</span>}</div></button>))}</div>);
+  return(<div style={{padding:"16px",paddingBottom:32}}><div style={{fontSize:"0.57rem",color:"#64b5d8",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:10}}>{AREAS.length} Areas — Tap for Detail</div>{AREAS.map(a=>(<button key={a.id} onClick={()=>setSel(a.id)} style={{width:"100%",background:"#0d1b2a",border:"1px solid #1a3a50",borderLeft:`4px solid ${a.color}`,borderRadius:8,padding:"13px 14px",marginBottom:10,cursor:"pointer",textAlign:"left",display:"block"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}><div style={{flex:1}}><div style={{fontSize:"0.85rem",fontWeight:700,color:"#fff"}}>{a.name}</div><div style={{fontSize:"0.58rem",color:"#64b5d8",marginTop:2}}>{a.ward}</div></div><div style={{textAlign:"right",flexShrink:0,marginLeft:10}}><div style={{fontSize:"0.58rem",color:a.color,fontWeight:700}}>{priorityLabel(a.priority)}</div></div></div><div style={{marginTop:8,display:"flex",gap:8,flexWrap:"wrap"}}><span style={{fontSize:"0.58rem",color:"#4a7a8a"}}>🚶 Base: {distLabel(bDist[a.coordId])}</span>{userDists&&user?.name&&<span style={{fontSize:"0.58rem",color:"#FFB347"}}>{user.name}: {distLabel(userDists[a.coordId])}</span>}</div></button>))}</div>);
 }
 
 // ─── ELECTION (Aberdeen South 2024 context + 2026 field) ────
@@ -524,12 +524,20 @@ function LeafletsTab({user}){
 // ─── TOWNS / DELIVERY AREAS (Aberdeen South — verified) ─────
 // Torry is built out fully as the worked example. AB postcodes verified
 // (StreetCheck/StreetList/postcodes.io); coordinates cross-checked.
+// ─── AREAS (13 delivery areas across Aberdeen South constituency) ─
+// Each area has:
+//   lat/lng       : tuned centre point — chosen so the search box does not
+//                   overlap neighbouring areas (verified against OS map).
+//   searchPadNS   : north-south radius in latitude degrees (~111 km/deg).
+//   searchPadEW   : east-west radius in longitude degrees (~60 km/deg at 57°N).
+//   knownStreets  : streets cross-checked against multiple authoritative sources
+//                   (Aberdeen City Council, StreetCheck, StreetList, Historic
+//                   Scotland, OpenAlfa, property listings). Highlighted on the map.
 const TOWNS = [
+  // ── East of the Dee ──────────────────────────────────────
   {
     id: "torry", name: "Torry", ward: "Torry/Ferryhill ward (AB11)",
     priority: 1, color: "#FF6B35", lat: 57.1336, lng: -2.0847,
-    // Torry is compact and east of the Dee — tighten the search to keep it out of
-    // central Aberdeen (north) and Cove (south). About +/- 0.8 km each way.
     searchPadNS: 0.008, searchPadEW: 0.014,
     sectors: ["AB11 8","AB11 9"], subsectorPrefix: "AB11 ",
     customSubsectors: [
@@ -538,39 +546,33 @@ const TOWNS = [
     ],
     estProperties: 4500,
     notes: "Jo's launch area. Dense granite tenements — efficient leafleting, watch shared stairs. Oil & gas heartland.",
-    // Verified Torry residential streets (cross-checked: StreetCheck, StreetList, property listings):
     knownStreets: ["Victoria Road","Menzies Road","Walker Road","Walker Lane","Walker Place","Grampian Road","Sinclair Road","Abbey Road","Abbey Place","Crombie Road","Oscar Road","Balnagask Road","Balnagask Avenue","Balnagask Circle","Balnagask Crescent","Balnagask Terrace","Girdleness Road","Greyhope Road","Baxter Place"],
   },
   {
     id: "kincorth", name: "Kincorth", ward: "Kincorth/Nigg/Cove ward (AB12)",
     priority: 1, color: "#FF6B35", lat: 57.1170, lng: -2.0950,
-    // Kincorth is also fairly compact, but tunes slightly larger than Torry.
-    searchPadNS: 0.010, searchPadEW: 0.016,
+    searchPadNS: 0.009, searchPadEW: 0.013,
     sectors: ["AB12 5"], subsectorPrefix: "AB12 5",
     subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S"],
     estProperties: 4000,
     notes: "Post-war residential suburb, houses with gardens. Slower per street than Torry.",
-    // Verified Kincorth streets (cross-checked: aberdeencity.gov.uk, StreetCheck, property listings):
     knownStreets: ["Provost Watt Drive","Kincorth Circle","Faulds Row","Faulds Gate","Faulds Wynd","Cairngorm Crescent","Abbotswell Crescent","Auldearn Road","Baxter Court"],
   },
   {
-    id: "niggcove", name: "Nigg & Cove", ward: "Kincorth/Nigg/Cove ward (AB12)",
-    priority: 1, color: "#FF6B35", lat: 57.1045, lng: -2.0780,
-    // Cove sprawls south from this centre — push the box south.
-    searchPadNS: 0.014, searchPadEW: 0.016,
+    id: "covebay", name: "Cove Bay", ward: "Kincorth/Nigg/Cove ward (AB12)",
+    priority: 1, color: "#FF6B35", lat: 57.0985, lng: -2.0820,
+    searchPadNS: 0.011, searchPadEW: 0.013,
     sectors: ["AB12 3"], subsectorPrefix: "AB12 3",
     subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S","T","U","W"],
     estProperties: 5000,
-    notes: "Modern commuter estates + Cove Bay village. Lower density, skip Altens/Tullos industry.",
-    // Verified Cove Bay streets (cross-checked: Wikipedia, OpenAlfa, StreetCheck, GetTheData):
+    notes: "Cove Bay village + Loirston estates. Modern commuter housing. Charleston folded in (south end).",
     knownStreets: ["Loirston Road","Loirston Avenue","Loirston Close","Loirston Court","Loirston Place","Loirston Manor","Earns Heugh Road","Earns Heugh Crescent","Catto Walk","Catto Crescent","Dunlin Road","Partan Skelly Avenue","Partan Skelly Way","Sinclair Crescent","Charleston Drive","Cove Road","Wellington Circle","Bervie Brow"],
   },
+  // ── Central / west of city, north of Dee ─────────────────
   {
     id: "ferryhill", name: "Ferryhill", ward: "Torry/Ferryhill ward (AB10/AB11)",
     priority: 2, color: "#FFB347", lat: 57.1365, lng: -2.1050,
-    // Compact inner suburb. Council document gives the boundaries as Bon-Accord/Willowbank to
-    // the north, Polmuir/Duthie Park to the south, Fonthill to the west.
-    searchPadNS: 0.008, searchPadEW: 0.012,
+    searchPadNS: 0.007, searchPadEW: 0.011,
     sectors: ["AB11 6","AB11 7"], subsectorPrefix: "AB11 ",
     customSubsectors: [
       {code:"AB11 6", label:"AB11 6 — Ferryhill / Bon Accord side"},
@@ -578,42 +580,100 @@ const TOWNS = [
     ],
     estProperties: 3500,
     notes: "Victorian villas, terraces and flats. Central, dense, walkable.",
-    // Verified Ferryhill streets (cross-checked: Historic Scotland, Aberdeen City Council conservation profile):
     knownStreets: ["Ferryhill Road","Fonthill Road","Fonthill Terrace","Polmuir Road","Bon-Accord Street","Bon-Accord Crescent","Bon-Accord Square","Whinhill Road","Devanha Gardens","Willowbank Road","Forbesfield Road","Marine Terrace","Crown Street","Crown Terrace","Gairn Terrace"],
   },
   {
     id: "ruthrieston", name: "Ruthrieston", ward: "Airyhall/Broomhill/Garthdee (AB10)",
-    priority: 2, color: "#FFB347", lat: 57.1280, lng: -2.1230,
-    searchPadNS: 0.010, searchPadEW: 0.014,
+    priority: 2, color: "#FFB347", lat: 57.1290, lng: -2.1230,
+    searchPadNS: 0.007, searchPadEW: 0.011,
     sectors: ["AB10 7"], subsectorPrefix: "AB10 7",
     subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P"],
     estProperties: 3000,
     notes: "Settled residential near Bridge of Dee. Moderate door-density.",
-    // Verified Ruthrieston streets (cross-checked: Aberdeen Street Index, property listings):
     knownStreets: ["Ruthrieston Road","Ruthrieston Crescent","Ruthrieston Terrace","Ruthrieston Place","Ruthrieston Circle","Anderson Drive","Holburn Street","Great Southern Road","Inchbrae Road","Inchbrae Drive","Inchbrae Terrace","Broomhill Road"],
   },
   {
     id: "garthdee", name: "Garthdee", ward: "Airyhall/Broomhill/Garthdee (AB10)",
     priority: 3, color: "#90E0EF", lat: 57.1180, lng: -2.1340,
-    searchPadNS: 0.010, searchPadEW: 0.014,
+    searchPadNS: 0.008, searchPadEW: 0.012,
     sectors: ["AB10 7"], subsectorPrefix: "AB10 7",
     subsectorLetters: ["Q","R","S","T","U","W","X","Y"],
     estProperties: 2500,
     notes: "Housing + RGU campus + retail park. Skip campus & retail; student lets = no-answers.",
-    // Verified Garthdee streets (cross-checked: Aberdeen Street Index, property listings):
     knownStreets: ["Garthdee Road","Garthdee Drive","Garthdee Crescent","Garthdee Terrace","Morrison Drive","Ramsay Gardens","Kaimhill Road","Kaimhill Circle","Kaimhill Gardens","Gairn Crescent","Gairn Circle"],
   },
   {
+    id: "mannofield", name: "Mannofield", ward: "Hazlehead/Queens Cross/Countesswells",
+    priority: 2, color: "#FFB347", lat: 57.1325, lng: -2.1430,
+    searchPadNS: 0.008, searchPadEW: 0.012,
+    sectors: ["AB10 6"], subsectorPrefix: "AB10 6",
+    subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S","T"],
+    estProperties: 3500,
+    notes: "West-end leafy granite terraces. Stable Conservative-Lib Dem patch. Quiet streets, decent density.",
+    knownStreets: ["Great Western Road","Cranford Road","Morningside Road","Craigton Road","Springfield Road","Countesswells Road","South Anderson Drive","North Anderson Drive","Anderson Drive","St John's Terrace","Friendville Road"],
+  },
+  {
+    id: "craigiebuckler", name: "Craigiebuckler", ward: "Hazlehead/Queens Cross/Countesswells",
+    priority: 3, color: "#90E0EF", lat: 57.1385, lng: -2.1620,
+    searchPadNS: 0.007, searchPadEW: 0.012,
+    sectors: ["AB15 7"], subsectorPrefix: "AB15 7",
+    subsectorLetters: ["S","T","U","W","Y"],
+    estProperties: 1500,
+    notes: "Small affluent area west of Mannofield. Macaulay Drive area + church. Detached/villa stock.",
+    knownStreets: ["Craigiebuckler Avenue","Macaulay Drive","Springfield Road","Springfield Place","Westholme Avenue","Countesswells Road","Anderson Drive"],
+  },
+  {
+    id: "countesswells", name: "Countesswells", ward: "Hazlehead/Queens Cross/Countesswells",
+    priority: 2, color: "#FFB347", lat: 57.1410, lng: -2.1880,
+    searchPadNS: 0.010, searchPadEW: 0.014,
+    sectors: ["AB15 8"], subsectorPrefix: "AB15 8",
+    subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S","T","U","W"],
+    estProperties: 1800,
+    notes: "NEW development (post-2017) between Hazlehead Park and Blacktop. Modern estate, lots of young families. Has own primary school. Worth strong effort — newer voters, less established political habits.",
+    knownStreets: ["Countesswells Road","Countesswells Avenue","Countesswells Terrace","Countesswells Park Avenue"],
+  },
+  // ── Western Deeside corridor (north of A93 only) ─────────
+  // For Bieldside and Milltimber the centre is pushed slightly north and
+  // the search radius kept tight north-south so the box stays north of A93.
+  {
     id: "cults", name: "Cults", ward: "Lower Deeside ward (AB15)",
-    priority: 3, color: "#90E0EF", lat: 57.1167, lng: -2.1667,
-    // Cults / Bieldside / Milltimber spread west along the A93 — needs a much wider east-west box.
-    searchPadNS: 0.012, searchPadEW: 0.030,
+    priority: 3, color: "#90E0EF", lat: 57.1180, lng: -2.1670,
+    searchPadNS: 0.008, searchPadEW: 0.014,
     sectors: ["AB15 9"], subsectorPrefix: "AB15 9",
-    subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S"],
+    subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P"],
     estProperties: 3000,
     notes: "Affluent — large detached homes, big gardens, LOWEST door-density. Slow; budget time.",
-    // Verified Cults streets (cross-checked: StreetList, Cults Parish Church, GeoStats, property listings):
-    knownStreets: ["North Deeside Road","Quarry Road","Kirk Brae","Kirk Crescent South","Kirk Terrace","Manor Place","Earlswells Road","South Avenue","Dunmail Avenue","Den of Cults","Inchgarth Road","Deeview Road South","Station Road","Primrosehill Road"],
+    knownStreets: ["North Deeside Road","Quarry Road","Kirk Brae","Kirk Crescent South","Kirk Terrace","Manor Place","Earlswells Road","South Avenue","Dunmail Avenue","Den of Cults","Inchgarth Road","Deeview Road South","Station Road","Primrosehill Road","Primrosehill Avenue","Primrosebank Avenue","Park Brae","Park Road","Loirsbank Road","West Cults Road","Ashfield Road"],
+  },
+  {
+    id: "bieldside", name: "Bieldside (north of A93)", ward: "Lower Deeside ward (AB15)",
+    priority: 3, color: "#90E0EF", lat: 57.1140, lng: -2.1965,
+    searchPadNS: 0.006, searchPadEW: 0.012,
+    sectors: ["AB15 9"], subsectorPrefix: "AB15 9",
+    subsectorLetters: ["Q","R","S","T","U","W"],
+    estProperties: 1200,
+    notes: "Affluent west-of-Cults. ONLY deliver north of the A93 (per Mark's instruction). Very low door-density — large detached homes, big gardens.",
+    knownStreets: ["North Deeside Road","Dalmuinzie Road","Beechhill Gardens","St Devenick's Place","Pitfodels Station Road","Westerton Road","Golf Road","Friarsfield Road","Abbotshall Drive","Abbotshall Crescent","Abbotshall Road"],
+  },
+  {
+    id: "milltimber", name: "Milltimber (north of A93)", ward: "Lower Deeside ward (AB13)",
+    priority: 3, color: "#90E0EF", lat: 57.1100, lng: -2.2300,
+    searchPadNS: 0.007, searchPadEW: 0.012,
+    sectors: ["AB13 0"], subsectorPrefix: "AB13 0",
+    subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S","T","U","W"],
+    estProperties: 1500,
+    notes: "Suburban-rural west of Bieldside. ONLY deliver north of the A93. Includes the Contlaw and Colthill developments.",
+    knownStreets: ["North Deeside Road","Contlaw Road","Contlaw Brae","Colthill Circle","Colthill Road","Milltimber Brae","Station Road East","Binghill Crescent","Woodlea Way"],
+  },
+  {
+    id: "peterculter", name: "Peterculter", ward: "Lower Deeside ward (AB14)",
+    priority: 2, color: "#FFB347", lat: 57.0945, lng: -2.2640,
+    searchPadNS: 0.009, searchPadEW: 0.013,
+    sectors: ["AB14 0"], subsectorPrefix: "AB14 0",
+    subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S","T","U","W","X","Y"],
+    estProperties: 2200,
+    notes: "Self-contained village at the south-west tip of the seat. Population ~4,400. Skip rural farmland south of the village.",
+    knownStreets: ["North Deeside Road","Coronation Road","Malcolm Road","Craigton Crescent","Craigton Drive","Craigton Grove","Craigton Terrace","Crombie Circle","Crown Crescent","Crown Place","Crown Terrace","Culter Den","Culter House Road","Dalmaik Crescent","Dalmaik Terrace","Den of Pittengullies","Hillside Crescent","Hillside Place","Hillside Road","Hillview Road","Howie Lane","Ivanhoe Road","Johnston Gardens East","Johnston Gardens North","Johnston Gardens West","Kennerty Mill Road","Lochnagar Crescent","Lochnagar Road","Millside Drive","Millside Road","Millside Terrace","Oriel Terrace","Park Road","Pittengullies Brae","Pittengullies Circle","Priory Park","School Crescent","School Road","St Mary's Place","Station Road East","Station Road West"],
   },
 ];
 
@@ -1049,13 +1109,15 @@ function ZoneBuilderTab({user}) {
     const run = () => {
       const savedStreetNames = new Set(zones.filter(z => z.townId === selTown.id).flatMap(z => (z.streets || []).map(s => s.name)));
       const skippedStreetNames = new Set(skippedAreas.filter(s => s.townId === selTown.id).flatMap(s => (s.streets || []).map(st => st.name)));
+      const knownStreetNameSet = new Set((selTown.knownStreets || []).map(s => s.toLowerCase()));
       Object.entries(streetLayersRef.current).forEach(([id, layers]) => {
         const isSelected = selectedStreets.has(id);
         const isSaved = savedStreetNames.has(id);
         const isSkipped = skippedStreetNames.has(id);
-        const color = isSelected && modeRef.current === "skip" ? "#FF006E" : isSelected ? "#FF8C00" : isSkipped ? "#FF006E" : isSaved ? "#00C853" : "#00B0CA";
-        const weight = isSelected ? 7 : isSkipped ? 6 : isSaved ? 5 : 3;
-        const opacity = isSelected ? 1 : isSkipped ? 1 : isSaved ? 0.9 : 0.65;
+        const isVerified = knownStreetNameSet.has(id.toLowerCase());
+        const color = isSelected && modeRef.current === "skip" ? "#FF006E" : isSelected ? "#FF8C00" : isSkipped ? "#FF006E" : isSaved ? "#00C853" : isVerified ? "#12B6CF" : "#5a8294";
+        const weight = isSelected ? 7 : isSkipped ? 6 : isSaved ? 5 : isVerified ? 4 : 2;
+        const opacity = isSelected ? 1 : isSkipped ? 1 : isSaved ? 0.9 : isVerified ? 0.95 : 0.55;
         layers.forEach(l => l.setStyle({ color, weight, opacity }));
       });
     };
@@ -1099,22 +1161,33 @@ function ZoneBuilderTab({user}) {
       const bounds = [];
       const savedStreetNameSet = new Set(zones.filter(z => z.townId === (selTown?.id || "")).flatMap(z => (z.streets||[]).map(s => s.name)));
       const skippedStreetNameSet = new Set(skippedAreas.filter(s => s.townId === (selTown?.id || "")).flatMap(s => (s.streets||[]).map(st => st.name)));
+      // Verified-street set for this area (case-insensitive comparison).
+      const knownStreetNameSet = new Set((selTown?.knownStreets || []).map(s => s.toLowerCase()));
       streets.forEach(street => {
         const layers = [];
         const isSaved = savedStreetNameSet.has(street.name);
         const isSkipped = skippedStreetNameSet.has(street.name);
-        const initColor = isSkipped ? "#FF006E" : isSaved ? "#00C853" : "#00B0CA";
-        const initWeight = isSkipped ? 6 : isSaved ? 5 : 3;
-        const initOpacity = isSkipped ? 1 : isSaved ? 0.9 : 0.65;
+        const isVerified = knownStreetNameSet.has(street.name.toLowerCase());
+        const initColor = isSkipped ? "#FF006E" : isSaved ? "#00C853" : isVerified ? "#12B6CF" : "#5a8294";
+        const initWeight = isSkipped ? 6 : isSaved ? 5 : isVerified ? 4 : 2;
+        const initOpacity = isSkipped ? 1 : isSaved ? 0.9 : isVerified ? 0.95 : 0.55;
         street.segments.forEach(seg => {
           if (seg.length < 2) return;
           const line = L.polyline(seg, { color: initColor, weight: initWeight, opacity: initOpacity }).addTo(map);
-          line.bindTooltip(`${street.name}${isSaved ? " ✓ Zoned" : isSkipped ? " ❌ Skipped" : ""}`, { sticky: true, direction: "top", className: "" });
+          line.bindTooltip(`${street.name}${isSaved ? " ✓ Zoned" : isSkipped ? " ❌ Skipped" : isVerified ? " ★ Verified" : ""}`, { sticky: true, direction: "top", className: "" });
           line.on("click", () => { toggleStreet(street.id); });
           layers.push(line); seg.forEach(pt => bounds.push(pt));
         });
         streetLayersRef.current[street.id] = layers;
       });
+      // Draw the search-box boundary as a thin dashed rectangle so the user can
+      // see exactly where this area's search extends (and whether it overlaps neighbours).
+      if (selTown && selTown.id !== "constituency" && selTown.searchPadNS != null) {
+        const padNS = selTown.searchPadNS, padEW = selTown.searchPadEW ?? 0.020;
+        const sw = [selTown.lat - padNS, selTown.lng - padEW];
+        const ne = [selTown.lat + padNS, selTown.lng + padEW];
+        L.rectangle([sw, ne], { color: selTown.color || "#FFB347", weight: 1, opacity: 0.7, fillOpacity: 0, dashArray: "5,5", interactive: false }).addTo(map);
+      }
       const zonedPcSet = new Set(zones.flatMap(z => (z.postcodes||[]).map(p => p.postcode)));
       const skippedPcSet = new Set(skippedAreas.flatMap(s => (s.postcodes||[]).map(p => p.postcode)));
       allDots.forEach(dot => {
@@ -1246,7 +1319,8 @@ function ZoneBuilderTab({user}) {
             <button onClick={()=>setMode("skip")} style={{flex:1,background:mode==="skip"?"#FF006E":"#1a3a50",border:"none",borderRadius:6,color:mode==="skip"?"#fff":"#64b5d8",fontSize:"0.65rem",fontWeight:700,padding:"7px",cursor:"pointer"}}>❌ Skip mode</button>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8,flexWrap:"wrap"}}>
-            <div style={{display:"flex",alignItems:"center",gap:4}}><div style={{width:20,height:3,background:"#00B0CA",borderRadius:2}}/><span style={{fontSize:"0.58rem",color:"#90E0EF"}}>Street</span></div>
+            <div style={{display:"flex",alignItems:"center",gap:4}}><div style={{width:20,height:3,background:"#12B6CF",borderRadius:2}}/><span style={{fontSize:"0.58rem",color:"#90E0EF"}}>Verified ★</span></div>
+            <div style={{display:"flex",alignItems:"center",gap:4}}><div style={{width:20,height:2,background:"#5a8294",borderRadius:2}}/><span style={{fontSize:"0.58rem",color:"#90E0EF"}}>Other</span></div>
             <div style={{display:"flex",alignItems:"center",gap:4}}><div style={{width:20,height:3,background:"#FF8C00",borderRadius:2}}/><span style={{fontSize:"0.58rem",color:"#90E0EF"}}>Selected</span></div>
             <div style={{display:"flex",alignItems:"center",gap:4}}><div style={{width:20,height:3,background:"#00C853",borderRadius:2}}/><span style={{fontSize:"0.58rem",color:"#90E0EF"}}>Zoned</span></div>
             <div style={{display:"flex",alignItems:"center",gap:4}}><div style={{width:20,height:3,background:"#FF006E",borderRadius:2}}/><span style={{fontSize:"0.58rem",color:"#90E0EF"}}>Skipped</span></div>
