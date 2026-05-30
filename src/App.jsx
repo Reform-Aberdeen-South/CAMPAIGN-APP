@@ -600,13 +600,16 @@ const TOWNS = [
   },
   {
     id: "kincorth", name: "Kincorth", ward: "Kincorth/Nigg/Cove ward (AB12)",
-    priority: 1, color: "#FF6B35", lat: 57.1170, lng: -2.0950,
-    searchPadNS: 0.009, searchPadEW: 0.013,
+    priority: 1, color: "#FF6B35", lat: 57.1150, lng: -2.1050,
+    searchPadNS: 0.018, searchPadEW: 0.032,
     sectors: ["AB12 5"], subsectorPrefix: "AB12 5",
-    subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S"],
-    estProperties: 4000,
-    notes: "Post-war residential suburb, houses with gardens. Slower per street than Torry.",
-    knownStreets: ["Provost Watt Drive","Kincorth Circle","Faulds Row","Faulds Gate","Faulds Wynd","Cairngorm Crescent","Abbotswell Crescent","Auldearn Road","Baxter Court"],
+    subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S","T","U"],
+    estProperties: 4500,
+    notes: "Post-war residential, south of the Dee. Polygon includes Kincorth proper, Tollohill, plus Leggart Terrace / Deeside Brae (the river-side strip west of the A92). Houses with gardens; slower per street than Torry.",
+    knownStreets: ["Provost Watt Drive","Kincorth Circle","Faulds Row","Faulds Gate","Faulds Wynd","Cairngorm Crescent","Cairngorm Drive","Abbotswell Crescent","Abbotswell Drive","Auldearn Road","Baxter Court","Tollohill Drive","Tollohill Crescent","Tollohill Place","Corthan Crescent","Corthan Drive","Leggart Terrace","Deeside Brae","Leggart Avenue","Deevale Road","Stonehaven Road","Gardner Crescent","Gardner Road","Gardner Drive","Dee View Court","Laws Road","Slessor Drive","Nigg Way"],
+    // Area polygon — natural barriers: River Dee (N), West Tullos Road / industry (E),
+    // Kincorth Hill green / Lochside Academy (S), Burn of Leggart / constituency edge (W).
+    polygon: [[-2.135,57.131],[-2.110,57.122],[-2.100,57.120],[-2.075,57.118],[-2.080,57.111],[-2.085,57.103],[-2.130,57.099],[-2.135,57.110],[-2.135,57.131]],
   },
   {
     id: "covebay", name: "Cove Bay", ward: "Kincorth/Nigg/Cove ward (AB12)",
@@ -633,14 +636,20 @@ const TOWNS = [
     knownStreets: ["Ferryhill Road","Fonthill Road","Fonthill Terrace","Polmuir Road","Bon-Accord Street","Bon-Accord Crescent","Bon-Accord Square","Whinhill Road","Devanha Gardens","Willowbank Road","Forbesfield Road","Marine Terrace","Crown Street","Crown Terrace","Gairn Terrace"],
   },
   {
-    id: "ruthrieston", name: "Ruthrieston", ward: "Airyhall/Broomhill/Garthdee (AB10)",
-    priority: 2, color: "#FFB347", lat: 57.1290, lng: -2.1230,
-    searchPadNS: 0.007, searchPadEW: 0.011,
-    sectors: ["AB10 7"], subsectorPrefix: "AB10 7",
-    subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P"],
-    estProperties: 3000,
-    notes: "Settled residential near Bridge of Dee. Moderate door-density.",
-    knownStreets: ["Ruthrieston Road","Ruthrieston Crescent","Ruthrieston Terrace","Ruthrieston Place","Ruthrieston Circle","Anderson Drive","Holburn Street","Great Southern Road","Inchbrae Road","Inchbrae Drive","Inchbrae Terrace","Broomhill Road"],
+    id: "ruthrieston", name: "Ruthrieston / Broomhill", ward: "Airyhall/Broomhill/Garthdee (AB10)",
+    priority: 2, color: "#FFB347", lat: 57.1280, lng: -2.1200,
+    searchPadNS: 0.011, searchPadEW: 0.017,
+    sectors: ["AB10 7","AB10 6"], subsectorPrefix: "AB10 ",
+    customSubsectors: [
+      {code:"AB10 7", label:"AB10 7 — Ruthrieston / Inchbrae / Kaimhill"},
+      {code:"AB10 6", label:"AB10 6 — Broomhill east / Holburn side"},
+    ],
+    estProperties: 3500,
+    notes: "Settled residential, north of the Dee, between Anderson Drive (W) and Holburn Street (E). Includes Broomhill and Kaimhill. Moderate door-density.",
+    knownStreets: ["Ruthrieston Road","Ruthrieston Crescent","Ruthrieston Terrace","Ruthrieston Place","Ruthrieston Circle","Inchbrae Road","Inchbrae Drive","Inchbrae Terrace","Broomhill Road","Holburn Street","Great Southern Road","Ashley Road","Forest Avenue","Forbesfield Road","Kaimhill Road","Kaimhill Circle","Kaimhill Gardens","Bloomfield Road","Balmoral Road","Braemar Place"],
+    // Polygon — natural barriers: Great Western Road (N), Holburn Street (E),
+    // River Dee (S), Anderson Drive (W).
+    polygon: [[-2.130,57.135],[-2.118,57.137],[-2.110,57.137],[-2.105,57.130],[-2.107,57.125],[-2.115,57.120],[-2.135,57.119],[-2.135,57.130],[-2.130,57.135]],
   },
   {
     id: "garthdee", name: "Garthdee", ward: "Airyhall/Broomhill/Garthdee (AB10)",
@@ -687,13 +696,16 @@ const TOWNS = [
   // the search radius kept tight north-south so the box stays north of A93.
   {
     id: "cults", name: "Cults", ward: "Lower Deeside ward (AB15)",
-    priority: 3, color: "#90E0EF", lat: 57.1180, lng: -2.1670,
-    searchPadNS: 0.008, searchPadEW: 0.014,
+    priority: 3, color: "#90E0EF", lat: 57.1245, lng: -2.1700,
+    searchPadNS: 0.0125, searchPadEW: 0.022,
     sectors: ["AB15 9"], subsectorPrefix: "AB15 9",
     subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P"],
     estProperties: 3000,
-    notes: "Affluent — large detached homes, big gardens, LOWEST door-density. Slow; budget time.",
+    notes: "Affluent — large detached homes, big gardens, LOWEST door-density. Bounded by the A93 (S), Garthdee/Pitfodels (E), Bieldside (W). Slow; budget time.",
     knownStreets: ["North Deeside Road","Quarry Road","Kirk Brae","Kirk Crescent South","Kirk Terrace","Manor Place","Earlswells Road","South Avenue","Dunmail Avenue","Den of Cults","Inchgarth Road","Deeview Road South","Station Road","Primrosehill Road","Primrosehill Avenue","Primrosebank Avenue","Park Brae","Park Road","Loirsbank Road","West Cults Road","Ashfield Road"],
+    // Polygon — natural barriers: A93 (S), Garthdee western edge (E),
+    // Cults/Bieldside division ~-2.190 (W), Hazlehead boundary / constituency edge (N).
+    polygon: [[-2.190,57.135],[-2.150,57.135],[-2.150,57.118],[-2.155,57.115],[-2.170,57.114],[-2.185,57.114],[-2.190,57.125],[-2.190,57.135]],
   },
   {
     id: "bieldside", name: "Bieldside (north of A93)", ward: "Lower Deeside ward (AB15)",
@@ -717,13 +729,16 @@ const TOWNS = [
   },
   {
     id: "peterculter", name: "Peterculter", ward: "Lower Deeside ward (AB14)",
-    priority: 2, color: "#FFB347", lat: 57.0945, lng: -2.2640,
-    searchPadNS: 0.009, searchPadEW: 0.013,
+    priority: 2, color: "#FFB347", lat: 57.1015, lng: -2.2725,
+    searchPadNS: 0.0155, searchPadEW: 0.0295,
     sectors: ["AB14 0"], subsectorPrefix: "AB14 0",
     subsectorLetters: ["A","B","D","E","F","G","H","J","L","N","P","Q","R","S","T","U","W","X","Y"],
     estProperties: 2200,
-    notes: "Self-contained village at the south-west tip of the seat. Population ~4,400. Skip rural farmland south of the village.",
+    notes: "Self-contained village at the south-west tip of the seat. Population ~4,400. Bounded by Den of Pittengullies (E, vs Milltimber), the Dee/A93 (S), constituency edge (W and N).",
     knownStreets: ["North Deeside Road","Coronation Road","Malcolm Road","Craigton Crescent","Craigton Drive","Craigton Grove","Craigton Terrace","Crombie Circle","Crown Crescent","Crown Place","Crown Terrace","Culter Den","Culter House Road","Dalmaik Crescent","Dalmaik Terrace","Den of Pittengullies","Hillside Crescent","Hillside Place","Hillside Road","Hillview Road","Howie Lane","Ivanhoe Road","Johnston Gardens East","Johnston Gardens North","Johnston Gardens West","Kennerty Mill Road","Lochnagar Crescent","Lochnagar Road","Millside Drive","Millside Road","Millside Terrace","Oriel Terrace","Park Road","Pittengullies Brae","Pittengullies Circle","Priory Park","School Crescent","School Road","St Mary's Place","Station Road East","Station Road West"],
+    // Polygon — natural barriers: Den of Pittengullies (E, vs Milltimber),
+    // A93/River Dee (S), constituency boundary (W and N).
+    polygon: [[-2.290,57.115],[-2.245,57.107],[-2.250,57.097],[-2.250,57.092],[-2.275,57.088],[-2.300,57.092],[-2.300,57.108],[-2.290,57.115]],
   },
 ];
 
@@ -1111,29 +1126,48 @@ function ZoneBuilderTab({user}) {
           if (!streetMap[name]) streetMap[name] = { name, id: name, segments: [] };
           streetMap[name].segments.push(el.geometry.map(n => [n.lat, n.lon]));
         });
-        // ── Polygon filter: keep only streets where the MAJORITY of points lie
-        // inside the official Aberdeen South constituency boundary. Drops streets
-        // that the Overpass bounding-box picked up but which are actually in a
-        // neighbouring constituency (Aberdeen North, West Aberdeenshire, etc).
+        // ── Polygon filter, two-stage:
+        //   1) Constituency boundary — drops streets the Overpass bounding-box
+        //      picked up but which are actually in a neighbouring constituency.
+        //   2) Area polygon (if defined) — drops streets that are in Aberdeen South
+        //      but not in this specific area, so the manager only sees the area
+        //      they tapped on. Uses natural barriers (rivers, dual carriageways,
+        //      main roads) so a deliverer's walking round stays coherent.
+        // Rule for both stages: majority of street points must be inside.
         const allStreets = Object.values(streetMap);
+        const pointInRing = (lng, lat, ring) => {
+          let inside = false;
+          for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+            const xi = ring[i][0], yi = ring[i][1];
+            const xj = ring[j][0], yj = ring[j][1];
+            if (((yi > lat) !== (yj > lat)) && (lng < (xj - xi) * (lat - yi) / (yj - yi + 1e-12) + xi)) {
+              inside = !inside;
+            }
+          }
+          return inside;
+        };
         const inSeat = [];
-        let droppedCount = 0;
+        let droppedOutsideSeat = 0, droppedOutsideArea = 0;
         allStreets.forEach(street => {
-          let total = 0, inside = 0;
+          let total = 0, insideSeat = 0, insideArea = 0;
           street.segments.forEach(seg => {
             seg.forEach(pt => {
-              // pt is [lat, lng]; isInsideConstituency takes (lng, lat)
+              // pt is [lat, lng]
               total++;
-              if (isInsideConstituency(pt[1], pt[0])) inside++;
+              if (isInsideConstituency(pt[1], pt[0])) insideSeat++;
+              if (town.polygon && pointInRing(pt[1], pt[0], town.polygon)) insideArea++;
             });
           });
-          if (total > 0 && inside * 2 > total) {
-            inSeat.push(street);
-          } else {
-            droppedCount++;
+          if (total === 0) { droppedOutsideSeat++; return; }
+          const inSeatMajority = insideSeat * 2 > total;
+          if (!inSeatMajority) { droppedOutsideSeat++; return; }
+          if (town.polygon) {
+            const inAreaMajority = insideArea * 2 > total;
+            if (!inAreaMajority) { droppedOutsideArea++; return; }
           }
+          inSeat.push(street);
         });
-        console.log(`[Zone Builder] ${town.name}: loaded ${allStreets.length} streets, kept ${inSeat.length} inside Aberdeen South, dropped ${droppedCount} outside.`);
+        console.log(`[Zone Builder] ${town.name}: loaded ${allStreets.length} streets, kept ${inSeat.length}, dropped ${droppedOutsideSeat} outside Aberdeen South, dropped ${droppedOutsideArea} outside ${town.name}.`);
         setStreets(inSeat);
       }
     } catch(e) { console.error("Overpass error:", e); }
@@ -1162,10 +1196,23 @@ function ZoneBuilderTab({user}) {
               });
               Object.entries(bySector).forEach(([sectorKey, pc]) => {
                 if (seen.has(sectorKey)) return;
-                // Drop postcode dots that fall outside the Aberdeen South boundary.
-                // postcodes.io returns the postcode's central point as lat/lng, so a
-                // simple point-in-polygon check is exactly right here.
+                // Constituency filter first — drop dots outside Aberdeen South.
                 if (!isInsideConstituency(pc.longitude, pc.latitude)) return;
+                // If this town has its own polygon, drop dots outside that polygon too,
+                // so the single-area view stays clean. (Whole-constituency mode loops
+                // every TOWNS entry, so each dot still gets included via its own area.)
+                if (t.polygon) {
+                  let inArea = false;
+                  const ring = t.polygon;
+                  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+                    const xi = ring[i][0], yi = ring[i][1];
+                    const xj = ring[j][0], yj = ring[j][1];
+                    if (((yi > pc.latitude) !== (yj > pc.latitude)) && (pc.longitude < (xj - xi) * (pc.latitude - yi) / (yj - yi + 1e-12) + xi)) {
+                      inArea = !inArea;
+                    }
+                  }
+                  if (!inArea) return;
+                }
                 seen.add(sectorKey);
                 dots.push({ postcode: sectorKey, lat: pc.latitude, lng: pc.longitude, townId: t.id, townColor: t.color, townName: t.name });
               });
@@ -1268,16 +1315,21 @@ function ZoneBuilderTab({user}) {
         });
         streetLayersRef.current[street.id] = layers;
       });
-      // Optional area-of-focus hint: a thin dashed rectangle showing the Overpass
-      // search box for the selected area. With Stage-3 polygon filtering the
-      // accuracy no longer depends on this box — it's purely a visual cue for where
-      // the manager's attention is right now. Kept subtle so it doesn't compete
-      // with the pink constituency boundary.
-      if (selTown && selTown.id !== "constituency" && selTown.searchPadNS != null) {
-        const padNS = selTown.searchPadNS, padEW = selTown.searchPadEW ?? 0.020;
-        const sw = [selTown.lat - padNS, selTown.lng - padEW];
-        const ne = [selTown.lat + padNS, selTown.lng + padEW];
-        L.rectangle([sw, ne], { color: selTown.color || "#FFB347", weight: 1, opacity: 0.4, fillOpacity: 0, dashArray: "4,6", interactive: false }).addTo(map);
+      // Draw the area's own boundary shape on the map so the manager can see
+      // exactly which area they are working in. For areas with a polygon (Stage 4),
+      // draw the polygon as a solid coloured line. For areas still using the
+      // legacy search-box only, draw the dashed rectangle as a fallback hint.
+      if (selTown && selTown.id !== "constituency") {
+        if (selTown.polygon) {
+          // polygon coords are [lng,lat] — Leaflet wants [lat,lng]
+          const ring = selTown.polygon.map(p => [p[1], p[0]]);
+          L.polyline(ring, { color: selTown.color || "#FFB347", weight: 2, opacity: 0.7, dashArray: "6,4", interactive: false }).addTo(map);
+        } else if (selTown.searchPadNS != null) {
+          const padNS = selTown.searchPadNS, padEW = selTown.searchPadEW ?? 0.020;
+          const sw = [selTown.lat - padNS, selTown.lng - padEW];
+          const ne = [selTown.lat + padNS, selTown.lng + padEW];
+          L.rectangle([sw, ne], { color: selTown.color || "#FFB347", weight: 1, opacity: 0.4, fillOpacity: 0, dashArray: "4,6", interactive: false }).addTo(map);
+        }
       }
       const zonedPcSet = new Set(zones.flatMap(z => (z.postcodes||[]).map(p => p.postcode)));
       const skippedPcSet = new Set(skippedAreas.flatMap(s => (s.postcodes||[]).map(p => p.postcode)));
